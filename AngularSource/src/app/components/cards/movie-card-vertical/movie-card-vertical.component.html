@@ -1,0 +1,9 @@
+<div class="card box-shadow" style="width: 100%;">
+  <img src='{{movie.poster}}' onerror="this.onerror=null;this.src='../../../assets/images/no-image.png';" class="card-img">
+  <div class="card-body">
+      <h6 class="card-subtitle mb-2 text-muted">{{movie.title}}</h6>
+      <div style="width: 100%;">
+        <a routerLink="/movieDetails/{{movie.imdbID}}" onerror="this.onerror=null;this.src='../../../assets/images/no-image.png';" class="btn btn-primary">Details</a>
+      </div>
+  </div>
+</div>

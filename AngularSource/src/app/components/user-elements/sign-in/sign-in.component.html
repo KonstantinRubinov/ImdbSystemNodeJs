@@ -1,0 +1,30 @@
+<form #myform="ngForm">
+  <div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Sign In</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+          <div class="form-group col-md-12">
+            <label for="UserName" *ngIf="usernameInfo.errors?.required && usernameInfo.touched" class="inputValidation ErrorColor">Missing user name.</label>
+            <label for="UserName" *ngIf="usernameInfo.errors?.minlength && usernameInfo.touched" class="inputValidation ErrorColor">Minimum two chars.</label>
+            <label for="UserName" *ngIf="(!usernameInfo.errors?.required || !usernameInfo.touched) && (!usernameInfo.errors?.minlength || !usernameInfo.touched)">UserName</label>
+              <input #usernameInfo="ngModel" required minlength="2" type="text" name="UserName2" id="UserName2" class="form-control" [(ngModel)]="login.userNickName" placeholder="UserName">
+          </div>
+      
+          <div class="form-group col-md-12">
+            <label for="Password" *ngIf="passwordInfo.errors?.required && passwordInfo.touched" class="inputValidation ErrorColor">Missing user password.</label>
+            <label for="Password" *ngIf="passwordInfo.errors?.minlength && passwordInfo.touched" class="inputValidation ErrorColor">Minimum two chars.</label>
+            <label for="Password" *ngIf="(!passwordInfo.errors?.required || !passwordInfo.touched) && (!passwordInfo.errors?.minlength || !passwordInfo.touched)">Password</label>
+              <input #passwordInfo="ngModel" required minlength="2" type="password" name="Password2" id="Password2" class="form-control" [(ngModel)]="login.userPassword" placeholder="Password">
+          </div>
+
+        <p *ngIf="loginError!==''" class="inputValidation">{{loginError}}</p>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-secondary" data-dismiss="modal">Close</button>
+    <button [disabled]="myform.form.invalid" class="btn btn-primary" (click)="signIn()">Sign In</button>
+  </div>
+
+</form>

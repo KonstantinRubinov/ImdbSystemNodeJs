@@ -1,0 +1,6 @@
+C:\data\db
+cd C:\Program Files\MongoDB\Server\4.2\bin
+mongod
+
+mongo
+use imdbSystem
