@@ -1,5 +1,5 @@
 This is your favorite movie database.
-Connected to imdb library, and sql database to save your favorite movies.
+Connected to imdb library, and mongo database to save your favorite movies.
 
 * .nodejs express
 * MongoDb database - with mongoose

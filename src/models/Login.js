@@ -13,5 +13,5 @@ let loginSchema = new Schema({
 }, {collection: 'logins'}
 )
 
-userSchema.plugin(uniqueValidator, { message: 'Email already in use.' });
+loginSchema.plugin(uniqueValidator, { message: 'Error, expected {PATH} to be unique.' });
 module.exports = mongoose.model('Login', loginSchema)
