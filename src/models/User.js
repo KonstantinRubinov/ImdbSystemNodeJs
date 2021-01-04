@@ -13,7 +13,7 @@ let userSchema = new Schema({
 	userEmail: { type: String, required: true, match: [/\S+@\S+\.\S+/, 'is invalid'] },
 	userGender: { type: String, required: true },
 	userBirthDate: { type: Date, required: true },
-	userPicture: { type: String, required: true },
+	userPicture: { type: String },
 	userLevel: { type: Number, required: true },
 	//userImage: { type: String, required: true },
 	userImdbPass: { type: String, required: true }

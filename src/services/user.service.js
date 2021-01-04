@@ -86,13 +86,32 @@ function AddUser(req, res, next){
         }
         else {
             bcrypt.hash(req.body.userPassword, 10).then((hash) => {
-                let extension = req.body.userPicture.split(".");
-                extension = extension[extension.length-1];
+                let extension = "";
+                let pictureName = "";
+                let filePath="";
+                let buff="";
+                let fd="";
 
-                let pictureName = createGuid()+"."+extension;
-                let filePath = "./src/assets/images/users/"+pictureName;
-                req.body.userImage = req.body.userImage.replace(/^data:image\/\w+;base64,/, "");
-                req.body.userImage = req.body.userImage.replace(/ /g, '+');
+                if(req.body.userPicture!==undefined && req.body.userPicture!==null && req.body.userPicture!==""){
+                    extension = req.body.userPicture.split(".");
+                    extension = extension[extension.length-1];
+                    let pictureName = createGuid()+"."+extension;
+                    filePath = "./src/assets/images/users/"+pictureName;
+                    req.body.userImage = req.body.userImage.replace(/^data:image\/\w+;base64,/, "");
+                    req.body.userImage = req.body.userImage.replace(/ /g, '+');
+                    buff = new Buffer.from(req.body.userImage, 'base64');
+                    fd =  fs.openSync(filePath, 'w');
+                    fs.write(fd, buff, 0, buff.length, 0, function(error,written){
+                        if (error!=null){
+                            fs.closeSync( fd );
+                            console.log("User not created! " + error);
+                            res.status(500).json({error: error});
+                        }
+                        fs.closeSync( fd );
+                    });
+                    
+                    req.body.userImage = "";
+                }
                 
                 const user = new userSchema({
                     userID: req.body.userID,
@@ -108,18 +127,7 @@ function AddUser(req, res, next){
                     userImdbPass: req.body.userImdbPass
                 });
 
-                let buff = new Buffer.from(req.body.userImage, 'base64');
-                let fd =  fs.openSync(filePath, 'w');
-                fs.write(fd, buff, 0, buff.length, 0, function(error,written){
-                    if (error!=null){
-                        fs.closeSync( fd );
-                        console.log("User not created! " + error);
-                        res.status(500).json({error: error});
-                    }
-                    fs.closeSync( fd );
-                });
                 
-                req.body.userImage = "";
 
                 //console.log(user);
                 user.save(

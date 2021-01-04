@@ -4,7 +4,9 @@
   "description": "A node token token-based server for imdb library with user authentication REST API",
   "main": "./src/server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "serve": "nodemon server.js",
+    "start": "node server.js"
   },
   "author": "Konstantin Rubinov",
   "license": "ISC",
