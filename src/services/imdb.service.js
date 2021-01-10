@@ -1,15 +1,8 @@
-// routes/imdb.routes.js
-
-const express = require("express");
-const router = express.Router();
-const authorize = require("../middlewares/auth");
-const decoded = require("../middlewares/decoded");
 const fetch = require("node-fetch");
 const movieSchema = require("../models/Movie");
 const movieExtendSchema = require("../models/MovieExtend");
 
-
-function createMovieModel(jmovie, userPass, userID)
+function createMovieModel(jmovie, userID)
 {
     let year= Number(jmovie.Year);
     const movieModel = new movieSchema({
@@ -22,7 +15,7 @@ function createMovieModel(jmovie, userPass, userID)
 	return movieModel;
 }
 
-function createMovieExtendModel(jmovie, userPass, userID)
+function createMovieExtendModel(jmovie, userID)
 {
     let seen=false;
     let year= Number(jmovie.Year);
@@ -41,58 +34,39 @@ function createMovieExtendModel(jmovie, userPass, userID)
 	return movieExtendModel;
 }
 
-
-// Get Movie By Word
-function GetImdbByWord (req, res, next) {
-    const userImdbPass = decoded(req).userImdbPass;
-    const userID = decoded(req).userID;
-    const movieWord = req.params.byWord;
+function GetImdbByWord (userImdbPass, userID, movieWord) {
     const url = "http://www.omdbapi.com/?" + "apikey=" + userImdbPass + "&s=" + movieWord;
-    //console.log("imdb word "+url);
-    fetch(url)
+    return fetch(url)
     .then(response=>response.json()).then(result=>{
         let movies=[];
         for(var i = 0; i < result.Search.length; i++) {
-            movies.push(createMovieModel(result.Search[i], userImdbPass, userID));
+            movies.push(createMovieModel(result.Search[i], userID));
         }
-        return res.json(movies)
-    }).catch((error) => { 
-        console.error(error);
-        return next(error);
+        return movies;
+    }).catch((error) => {
+        throw Error(error);
     });
 }
 
-// Get Movie By Id
-function GetImdbById (req, res, next){
-    const userImdbPass = decoded(req).userImdbPass;
-    const userID = decoded(req).userID;
-    const imdbID = req.params.imdbID;
+function GetImdbById (userImdbPass, userID, imdbID){
     const url = "http://www.omdbapi.com/?" + "apikey=" + userImdbPass + "&i=" + imdbID + "&plot=full";
-    //console.log("imdb imdbID "+url);
-    fetch(url)
+    return fetch(url)
     .then(response=>response.json()).then(result=>{ 
-        result = createMovieExtendModel(result, userImdbPass, userID);
-        return res.json(result);
+        result = createMovieExtendModel(result, userID);
+        return result;
     }).catch((error) => { 
-        console.error(error);
-        return next(error);
+        throw Error(error);
     });
 }
 
-// Get Movie By Title
-function GetImdbByTitle(req, res, next) {
-    const userImdbPass = decoded(req).userImdbPass;
-    const userID = decoded(req).userID;
-    const movieTitle = req.params.movieTitle;
+function GetImdbByTitle(userImdbPass, userID, movieTitle) {
     const url = "http://www.omdbapi.com/?" + "apikey=" + userImdbPass + "&t=" + movieTitle;
-    //console.log("imdb title "+url);
-    fetch(url)
+    return fetch(url)
     .then(response=>response.json()).then(result=>{ 
-        result = createMovieExtendModel(result, userImdbPass, userID);
-        return res.json(result)
-    }).catch((error) => { 
-        console.error(error);
-        return next(error);
+        result = createMovieExtendModel(result, userID);
+        return result;
+    }).catch((error) => {
+        throw Error(error);
     });
 }
 

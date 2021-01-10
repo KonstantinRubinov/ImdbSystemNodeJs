@@ -87,6 +87,7 @@ export class FavoriteMoviesService {
       const action: Action={type:ActionType.AddMovieToFavoriteError, payload:error.message};
       this.redux.dispatch(action);
       this.logger.error("AddMovieToFavoriteError: ", error.message);
+      this.router.navigate(["/favorites"]);
     });
   }
 
@@ -102,6 +103,7 @@ export class FavoriteMoviesService {
       const action: Action={type:ActionType.UpdateFavoriteMovieError, payload:error.message};
       this.redux.dispatch(action);
       this.logger.error("UpdateMovieToFavoriteError: ", error.message);
+      this.router.navigate(["/favorites"]);
     });
   }
 
@@ -120,6 +122,7 @@ public DeleteFromFavorites(imdbId: string): void {
       const action: Action={type:ActionType.DeleteFavoriteMovieError, payload:error.message};
       this.redux.dispatch(action);
       this.logger.error("DeleteFromFavoritesError: ", error.message);
+      this.router.navigate(["/favorites"]);
     });
   }
 }

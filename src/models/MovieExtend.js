@@ -9,7 +9,7 @@ let movieExtendSchema = new Schema({
     rated: { type: String },
     imdbRating: { type: Number },
     seen: { type: Boolean, required: true },
-    imdbID: { type: String, required: true },
+    imdbID: { type: String, unique:true, required: true },
     title: { type: String, required: true },
     poster: { type: String },
     userID: { type: String, required: true },

@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 let movieSchema = new Schema({
-    imdbID: { type: String, required: true },
+    imdbID: { type: String, unique:true, required: true },
     title: { type: String, required: true },
     poster: { type: String, required: true },
     userID: { type: String, required: true },

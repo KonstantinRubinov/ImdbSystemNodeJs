@@ -5,17 +5,18 @@ const bodyParser = require('body-parser');
 const dbConfig = require('./database/db');
 
 // Express APIs
-const imdbApi = require('./controllers/imdb.controller');
-const movieApi = require('./controllers/movieextend.controller');
-const userApi = require('./controllers/user.controller');
-const loginApi = require('./controllers/login.controller');
-const startApi = require('./controllers/start.controller');
+const imdbApi = require('./routes/imdb.route');
+const movieApi = require('./routes/movieextend.route');
+const userApi = require('./routes/user.route');
+const loginApi = require('./routes/login.route');
+const startApi = require('./routes/start.route');
 
 // MongoDB conection
 mongoose.Promise = global.Promise;
 mongoose.connect(dbConfig.db, {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
+    useFindAndModify: false
 }).then(() => {
     console.log('Database connected')
 },
