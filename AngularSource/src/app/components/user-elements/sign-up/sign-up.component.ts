@@ -10,6 +10,8 @@ import { Store } from 'src/app/redux/store';
 import { NgRedux } from 'ng2-redux';
 import { LoginUser } from 'src/app/models/LoginUser';
 import { UserService } from 'src/app/services/ApiConnections/user.service';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ValidationService } from 'src/app/services/validation.service';
 
 @Component({
   selector: 'app-sign-up',
@@ -17,6 +19,8 @@ import { UserService } from 'src/app/services/ApiConnections/user.service';
   styleUrls: ['./sign-up.component.css']
 })
 export class SignUpComponent implements OnInit {
+   public minDate = new Date('1920-12-17T03:24:00');
+   public maxDate = new Date();
    public userFirstName: string;
    public userLastName: string;
    public userID: string;
@@ -66,49 +70,86 @@ export class SignUpComponent implements OnInit {
       'color':'black'
    };
 
+   public signUpForm:any;
    constructor(private userService: UserService,
                private router: Router,
                private logger: LogService,
-               private redux:NgRedux<Store>) { }
-
+               private redux:NgRedux<Store>) {
+      this.signUpForm = new FormGroup({
+         FirstName: new FormControl(this.userFirstName, [
+           Validators.required,
+           Validators.minLength(2),
+         ]),
+         LastName: new FormControl(this.userLastName, [
+            Validators.required,
+            Validators.minLength(2)
+         ]),
+         ID: new FormControl(this.userID, [
+            Validators.required,
+            Validators.minLength(8),
+            ValidationService.idValidator
+         ]),
+         BirthDate: new FormControl(this.userBirthDate, [
+            Validators.required
+         ]),
+         Gender: new FormControl(this.userGender, [
+            Validators.required
+         ]),
+         Email: new FormControl(this.userEmail, [
+            Validators.required,
+            ValidationService.emailValidator
+         ]),
+         ImdbPass: new FormControl(this.userImdbPass, [
+            Validators.required,
+            Validators.minLength(2)
+         ]),
+         UserName: new FormControl(this.userNickName, [
+            Validators.required,
+            Validators.minLength(2)
+         ]),
+         Password: new FormControl(this.userPassword, [
+            Validators.required,
+            Validators.minLength(2)
+         ]),
+         RetypePassword: new FormControl(this.userPassword2, [
+            Validators.required,
+            Validators.minLength(2)
+         ])
+      }, ValidationService.match);
+   }
+      
    errmsg: any;  
 
    public signUp(): void {
-      let idIsRight = this.ValidateID(this.userID)
-      if (this.userPassword===this.userPassword2){
-         this.userPassword=this.userPassword;
-      }
-      if (idIsRight===1 && this.userPassword===this.userPassword2){
-         let user:User=new User(
-            this.userID,
-            this.userFirstName,
-            this.userLastName,
-            this.userNickName,
-            this.userPassword,
-            this.userEmail,
-            this.userGender,
-            this.userBirthDate,
-            this.userPicture,
-            1,
-            this.userImage,
-            this.userImdbPass
-         );
-         this.userService.signUp(user).subscribe(user=>{
-               if(user.hasOwnProperty('result')){
-                  user=user.result;
-               }
-               this.logger.debug("signUp: ", user);
-               let loginUser:LoginUser = new LoginUser();
-               loginUser.userNickName= user.userNickName;
-               loginUser.userPassword= user.userPassword;
-               this.signIn(loginUser);
-            }, error => {
-               const action: Action={type:ActionType.SignUpError, payload:error.error};
-               this.redux.dispatch(action);
-               this.logger.error("signUpError: ", error.message);
+      let user:User=new User(
+         this.userID,
+         this.userFirstName,
+         this.userLastName,
+         this.userNickName,
+         this.userPassword,
+         this.userEmail,
+         this.userGender,
+         this.userBirthDate,
+         this.userPicture,
+         1,
+         this.userImage,
+         this.userImdbPass
+      );
+      this.userService.signUp(user).subscribe(user=>{
+            if(user.hasOwnProperty('result')){
+               user=user.result;
             }
-         );
-      }
+            this.logger.debug("signUp: ", user);
+            let loginUser:LoginUser = new LoginUser();
+            loginUser.userNickName= user.userNickName;
+            loginUser.userPassword= user.userPassword;
+            this.signIn(loginUser);
+         }, error => {
+            const action: Action={type:ActionType.SignUpError, payload:error.error};
+            this.redux.dispatch(action);
+            this.logger.error("signUpError: ", error.message);
+         }
+      );
    }
 
    public signIn(loginUser:LoginUser): void {
@@ -164,59 +205,6 @@ export class SignUpComponent implements OnInit {
    
    ngOnInit() {}
    
-   public ValidateRetypePassword(){
-      if (this.userPassword!=null && this.userPassword2!=null &&this.userPassword!==this.userPassword2){
-         return false;
-      } else return true;
-   }
-  
-   public ValidateID(IDnum:string):number
-   {
-      var R_ELEGAL_INPUT = -1;
-      var R_NOT_VALID = -2;
-      var R_VALID = 1; 
-      
-      if (IDnum==null || IDnum==='' ||IDnum.length==0){
-         return R_ELEGAL_INPUT;
-      }
-      
-      // Validate correct input
-      if ((IDnum.length > 9) || (IDnum.length < 5)){
-         return R_ELEGAL_INPUT; 
-      }
-      if (!this.isANumber(IDnum)){
-         return R_ELEGAL_INPUT;
-      }
-      
-      // The number is too short - add leading 0000
-      if (IDnum.length < 9)
-      {
-         while(IDnum.length < 9)
-         {
-            IDnum = '0' + IDnum;         
-         }
-      }
-   
-      // CHECK THE ID NUMBER
-      var mone = 0, incNum;
-      for (var i=0; i < 9; i++)
-      {
-         incNum = Number(IDnum.charAt(i));
-         incNum *= (i%2)+1;
-         if (incNum > 9)
-            incNum -= 9;
-         mone += incNum;
-      }
-      if (mone%10 == 0)
-         return R_VALID;
-      else
-         return R_NOT_VALID;
-   }
-
-   private isANumber(str){
-      return !/\D/.test(str);
-   }
-   
    public croppedImage: any = '';
    
    public imageCropped(event: ImageCroppedEvent) {
@@ -233,5 +221,13 @@ export class SignUpComponent implements OnInit {
 
    public loadImageFailed() {
       // show message
+   }
+
+   numberOnly(event): boolean {
+      const charCode = (event.which) ? event.which : event.keyCode;
+      if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+        return false;
+      }
+      return true;
    }
 }

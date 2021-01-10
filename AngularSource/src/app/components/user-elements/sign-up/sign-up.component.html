@@ -1,4 +1,4 @@
-<form #formInfo="ngForm">
+<!-- <form #formInfo="ngForm">
   <div class="modal-header">
     <h5 class="modal-title" id="exampleModalLabel">Sign Up</h5>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -27,9 +27,7 @@
         <label for="ID" *ngIf="idInfo.errors?.required && idInfo.touched" class="inputValidation ErrorColor">Missing user ID.</label>
         <label for="ID" *ngIf="idInfo.value !== '' && idInfo.errors?.minlength && idInfo.touched" class="inputValidation ErrorColor">Minimum eight chars.</label>
         <label for="ID" *ngIf="idInfo.value !== '' && !idInfo.errors?.required && !idInfo.errors?.minlength && ValidateID(idInfo.value)!=1 && ValidateID(idInfo.value)!=0 && idInfo.touched" class="inputValidation ErrorColor">Wrong User ID.</label>
-        <!-- <label for="Email" *ngIf="idInfo.errors && !idInfo.errors?.required && idInfo.value !== '' && (idInfo.touched || idInfo.dirty)" class="inputValidation ErrorColor">Wrong User ID.</label> -->
         <label for="ID" *ngIf="(!idInfo.errors?.required || !idInfo.touched) && (idInfo.value === '' || !idInfo.errors?.minlength || !idInfo.errors?.touched) && (ValidateID(idInfo.value)==1 || ValidateID(idInfo.value)==0 || !idInfo.touched)">ID</label>
-        <!-- <input #idInfo="ngModel" required pattern="/^[0-9]*$/" minlength="8" type="text" name="ID" id="ID" class="form-control" [(ngModel)]="user.userID" placeholder="ID"> -->
         <input #idInfo="ngModel" required minlength="8" type="text" name="ID" id="ID" class="form-control" [(ngModel)]="userID" placeholder="ID">
       </div>
       <div class="form-group col-md-6">
@@ -100,5 +98,110 @@
   <div class="modal-footer">
     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
     <button type="button" [disabled]="formInfo.form.invalid" class="btn btn-primary" (click)="signUp()">Sign Up</button>
+  </div>
+</form> -->
+
+<form [formGroup]="signUpForm">
+  <div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Sign Up</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="FirstName" *ngIf="signUpForm.hasError('required', 'FirstName') && signUpForm.controls['FirstName']?.touched" class="inputValidation ErrorColor">Missing user first name.</label>
+        <label for="FirstName" *ngIf="signUpForm.hasError('minlength', 'FirstName') && signUpForm.controls['FirstName']?.touched" class="inputValidation ErrorColor">Minimum two chars.</label>
+        <label for="FirstName" *ngIf="(!signUpForm.hasError('required', 'FirstName') && !signUpForm.hasError('minlength', 'FirstName')) || !signUpForm.controls['FirstName']?.touched">FirstName</label>
+        <input formControlName="FirstName" type="text" name="FirstName" id="FirstName" class="form-control" [(ngModel)]="userFirstName" placeholder="FirstName">
+      </div>
+      <div class="form-group col-md-6">
+        <label for="LastName" *ngIf="signUpForm.hasError('required', 'LastName') && signUpForm.controls['LastName']?.touched" class="inputValidation ErrorColor">Missing user last name.</label>
+        <label for="LastName" *ngIf="signUpForm.hasError('minlength', 'LastName') && signUpForm.controls['LastName']?.touched" class="inputValidation ErrorColor">Minimum two chars.</label>
+        <label for="LastName" *ngIf="(!signUpForm.hasError('required', 'LastName') && !signUpForm.hasError('minlength', 'LastName')) || !signUpForm.controls['LastName']?.touched">LastName</label>
+        <input formControlName="LastName" type="text" name="LastName" id="LastName" class="form-control" [(ngModel)]="userLastName" placeholder="LastName">
+      </div>
+    </div>
+    
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="ID" *ngIf="signUpForm.hasError('required', 'ID') && signUpForm.controls['ID']?.touched" class="inputValidation ErrorColor">Missing user ID.</label>
+        <label for="ID" *ngIf="signUpForm.hasError('minlength', 'ID') && signUpForm.controls['ID']?.touched" class="inputValidation ErrorColor">Minimum eight chars.</label>
+        <label for="ID" *ngIf="signUpForm.hasError('invalidId', 'ID') && signUpForm.controls['ID']?.touched" class="inputValidation ErrorColor">Wrong User ID.</label>
+        <label for="ID" *ngIf="(!signUpForm.hasError('required', 'ID') && !signUpForm.hasError('minlength', 'ID')  && !signUpForm.hasError('invalidId', 'ID')) || !signUpForm.controls['ID']?.touched">ID</label>
+        <input formControlName="ID" type="text" name="ID" id="ID" class="form-control" (keypress)="numberOnly($event)" [(ngModel)]="userID" placeholder="ID">
+      </div>
+      <div class="form-group col-md-6">
+        <label for="BirthDate" *ngIf="signUpForm.hasError('required', 'BirthDate') && signUpForm.controls['BirthDate']?.touched" class="inputValidation ErrorColor">Missing user birthDate.</label>
+        <label for="BirthDate" *ngIf="(!signUpForm.hasError('required', 'BirthDate')) || !signUpForm.controls['BirthDate']?.touched">BirthDate</label>
+        <input formControlName="BirthDate" max="{{maxDate | date:'yyyy-MM-dd'}}" min="{{minDate | date:'yyyy-MM-dd'}}" type="date" name="BirthDate" id="BirthDate" class="form-control" (ngModel)="userBirthDate" (ngModelChange)="userBirthDate = $event" placeholder="BirthDate">
+      </div>
+    </div>
+          
+    <div class="form-row">
+      <div class="form-group col-md-4">
+        <label for="Gender" *ngIf="signUpForm.hasError('required', 'Gender') && signUpForm.controls['Gender']?.touched" class="inputValidation ErrorColor">Missing user gender.</label>
+        <label for="Gender" *ngIf="(!signUpForm.hasError('required', 'Gender')) || !signUpForm.controls['Gender']?.touched">Gender</label>
+        <select formControlName="Gender" type="text" name="Gender" id="Gender" class="form-control" [(ngModel)]="userGender">
+          <option *ngFor="let genderChoise of genderChoises" [ngValue]="genderChoise">{{ genderChoise }}</option>
+        </select>
+      </div>
+      <div class="form-group col-md-4">
+        <label for="Email" *ngIf="signUpForm.hasError('required', 'Email') && signUpForm.controls['Email']?.touched" class="inputValidation ErrorColor">Missing user email.</label>
+        <label for="Email" *ngIf="signUpForm.hasError('invalidEmailAddress', 'Email') && signUpForm.controls['Email']?.touched" class="inputValidation ErrorColor">Wrong user email.</label>
+        <label for="Email" *ngIf="(!signUpForm.hasError('required', 'Email') && !signUpForm.hasError('invalidEmailAddress', 'Email')) || !signUpForm.controls['Email']?.touched">Email</label>
+        <input formControlName="Email" type="email" name="Email" id="Email" class="form-control" [(ngModel)]="userEmail" placeholder="Email">
+      </div>
+      <div class="form-group col-md-4">
+        <label for="Imdb" *ngIf="signUpForm.hasError('required', 'ImdbPass') && signUpForm.controls['ImdbPass']?.touched" class="inputValidation ErrorColor">Missing Imdb Pass.</label>
+        <label for="Imdb" *ngIf="signUpForm.hasError('minlength', 'ImdbPass') && signUpForm.controls['ImdbPass']?.touched" class="inputValidation ErrorColor">Imdb Pass minimum two chars.</label>
+        <label for="Imdb" *ngIf="(!signUpForm.hasError('required', 'ImdbPass') && !signUpForm.hasError('minlength', 'ImdbPass')) || !signUpForm.controls['ImdbPass']?.touched">Imdb Pass</label>
+        <input formControlName="ImdbPass" type="text" name="Imdb" id="Imdb" class="form-control" [(ngModel)]="userImdbPass" placeholder="ImdbPass">
+      </div>
+    </div>
+          
+    <div class="form-row">
+      <div class="form-group col-md-4">
+        <label for="UserName" *ngIf="signUpForm.hasError('required', 'UserName') && signUpForm.controls['UserName']?.touched" class="inputValidation ErrorColor">Missing nick name.</label>
+        <label for="UserName" *ngIf="signUpForm.hasError('minlength', 'UserName') && signUpForm.controls['UserName']?.touched" class="inputValidation ErrorColor">Minimum two chars.</label>
+        <label for="UserName" *ngIf="(!signUpForm.hasError('required', 'UserName') && !signUpForm.hasError('minlength', 'UserName')) || !signUpForm.controls['UserName']?.touched">UserName</label>
+        <input formControlName="UserName" type="text" name="UserName" id="UserName" class="form-control" [(ngModel)]="userNickName" placeholder="UserName">
+      </div>
+      <div class="form-group col-md-4">
+        <label for="Password" *ngIf="signUpForm.hasError('required', 'Password') && signUpForm.controls['Password']?.touched" class="inputValidation ErrorColor">Missing password.</label>
+        <label for="Password" *ngIf="signUpForm.hasError('minlength', 'Password') && signUpForm.controls['Password']?.touched" class="inputValidation ErrorColor">Minimum two chars.</label>
+        <label for="Password" *ngIf="signUpForm.hasError('mustMatch', 'Password') && signUpForm.controls['Password']?.touched" class="inputValidation ErrorColor">password dosn't match.</label>
+        <label for="Password" *ngIf="(!signUpForm.hasError('required', 'Password') && !signUpForm.hasError('minlength', 'Password') && !signUpForm.hasError('mustMatch', 'Password')) || !signUpForm.controls['Password']?.touched">Password</label>
+        <input formControlName="Password" type="password" name="Password" id="Password" class="form-control" [(ngModel)]="userPassword" placeholder="Password">
+      </div>
+      <div class="form-group col-md-4">
+        <label for="RetypePassword" *ngIf="signUpForm.hasError('required', 'RetypePassword') && signUpForm.controls['RetypePassword']?.touched" class="inputValidation ErrorColor">Missing retype.</label>
+        <label for="RetypePassword" *ngIf="signUpForm.hasError('minlength', 'RetypePassword') && signUpForm.controls['RetypePassword']?.touched" class="inputValidation ErrorColor">Minimum two chars.</label>
+        <label for="RetypePassword" *ngIf="signUpForm.hasError('mustMatch', 'RetypePassword') && signUpForm.controls['RetypePassword']?.touched" class="inputValidation ErrorColor">password dosn't match.</label>
+        <label for="RetypePassword" *ngIf="(!signUpForm.hasError('required', 'RetypePassword') && !signUpForm.hasError('minlength', 'RetypePassword') && !signUpForm.hasError('mustMatch', 'RetypePassword')) || !signUpForm.controls['RetypePassword']?.touched">RetypePassword</label>
+        <input formControlName="RetypePassword" type="password" name="RetypePassword" id="RetypePassword" class="form-control" [(ngModel)]="userPassword2" placeholder="RetypePassword">
+      </div>
+    </div>
+          
+    <input type="file" (change)="fileChangeEvent($event)">
+      <image-cropper
+        [aspectRatio]="1 / 1"
+        [imageChangedEvent]="imageChangedEvent"
+        [maintainAspectRatio]="true"
+        [resizeToWidth]="0"
+        format="extension"
+        (imageCropped)="imageCropped($event)"
+        (imageLoaded)="imageLoaded()"
+        (loadImageFailed)="loadImageFailed()"
+    ></image-cropper>
+    <img [src]="croppedImage" style="width:100px" />
+          
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+    <button type="button" [disabled]="!signUpForm.valid" class="btn btn-primary" (click)="signUp()">Sign Up</button>
   </div>
 </form>

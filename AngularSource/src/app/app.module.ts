@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { HttpClientModule } from '@angular/common/http';
 import { ImageCropperModule } from 'ngx-image-cropper';
 import { CookieService } from 'ngx-cookie-service';
@@ -22,6 +22,9 @@ import { MovieCardVerticalComponent } from './components/cards/movie-card-vertic
 import { MovieCardHorizontalComponent } from './components/cards/movie-card-horizontal/movie-card-horizontal.component';
 import { MovieDetailsComponent } from './components/data-elements/movie-details/movie-details.component';
 import { MovieCardFlippingComponent } from './components/cards/movie-card-flipping/movie-card-flipping.component';
+import { RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { RoutingModule } from './modules/routing.module';
 
 @NgModule({
   declarations: [
@@ -44,7 +47,11 @@ import { MovieCardFlippingComponent } from './components/cards/movie-card-flippi
     NgReduxModule,
     FormsModule,
     HttpClientModule,
-    ImageCropperModule
+    ImageCropperModule,
+    ReactiveFormsModule,
+    RouterModule,
+    CommonModule,
+    RoutingModule
   ],
   providers: [CookieService ],
   bootstrap: [LayoutComponent]
