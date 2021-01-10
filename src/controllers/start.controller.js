@@ -11,11 +11,11 @@ exports.GetFavicon = async function (req, res) {
 }
 
 exports.GetMain1 = async function (req, res) {
-    res.sendFile('main-es5.78c2944075552d9f1a0e.js', { root: "./src/html" } );
+    res.sendFile('main-es5.4621dc78558fece5e82a.js', { root: "./src/html" } );
 }
 
 exports.GetMain2 = async function (req, res) {
-    res.sendFile('main-es2015.78c2944075552d9f1a0e.js', { root: "./src/html" } );
+    res.sendFile('main-es2015.4621dc78558fece5e82a.js', { root: "./src/html" } );
 }
 
 exports.GetPolyfills1 = async function (req, res) {
