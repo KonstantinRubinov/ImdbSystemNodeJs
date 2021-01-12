@@ -11,16 +11,16 @@
   "author": "Konstantin Rubinov",
   "license": "ISC",
   "dependencies": {
-    "bcrypt": "^3.0.8",
+    "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
-    "express-validator": "^6.2.0",
+    "express-validator": "^6.9.2",
     "http-status-codes": "^2.1.4",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.7.3",
+    "mongoose": "^5.11.11",
     "mongoose-unique-validator": "^2.0.3",
     "node-fetch": "^2.6.1",
-    "nodemon": "^2.0.6"
+    "nodemon": "^2.0.7"
   }
 }

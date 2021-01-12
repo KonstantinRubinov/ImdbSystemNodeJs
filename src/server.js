@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const dbConfig = require('./database/db');
+var HttpStatus = require('http-status-codes');
 
 // Express APIs
 const imdbApi = require('./routes/imdb.route');
@@ -61,6 +62,6 @@ app.use((req, res, next) => {
 
 app.use(function (error, req, res, next) {
     console.error(error.message);
-    if (!error.statusCode) error.statusCode = 500;
+    if (!error.statusCode) error.statusCode = HttpStatus.StatusCodes.INTERNAL_SERVER_ERROR;
     res.status(error.statusCode).send(error.message);
 });
